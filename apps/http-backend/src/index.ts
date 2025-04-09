@@ -1,5 +1,6 @@
-import express, { Request, Response } from "express";
+import express from "express";
 import jwt from "jsonwebtoken";
+import { signUpSchema } from "@repo/common/types";
 import "dotenv/config";
 
 const app = express();
@@ -7,6 +8,12 @@ const jwtSecret = process.env.JWT_SECRET || "";
 
 app.post("/signup", (req, res) => {
   //zod validation
+  const verify = signUpSchema.safeParse(req.body);
+
+  if (!verify.success) {
+    res.json("Unauthorized").status(403);
+    return;
+  }
   //db call
   //return
   res.json({
@@ -30,7 +37,7 @@ app.post("/signin", (req, res) => {
   res.json({
     id: 1,
     token: jwtToken,
-});
+  });
 });
 
 app.post("/room", (req, res) => {
