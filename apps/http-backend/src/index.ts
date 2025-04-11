@@ -2,6 +2,7 @@ import express from "express";
 import jwt from "jsonwebtoken";
 import { signUpSchema } from "@repo/common/types";
 import "dotenv/config";
+import { middleware } from "./middleware";
 
 const app = express();
 const jwtSecret = process.env.JWT_SECRET || "";
@@ -40,7 +41,7 @@ app.post("/signin", (req, res) => {
   });
 });
 
-app.post("/room", (req, res) => {
+app.post("/room", middleware, (req, res) => {
   //zod validation
   //db call
   //return
