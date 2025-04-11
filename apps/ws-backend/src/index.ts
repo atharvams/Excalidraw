@@ -1,8 +1,27 @@
+import jwt, { JwtPayload } from "jsonwebtoken";
 import { WebSocketServer } from "ws";
 
 const wss = new WebSocketServer({ port: 8080 });
+const JWT_SECRET = process.env.JWT_SECRET || "";
 
-wss.on("connection", function connection(ws) {
+wss.on("connection", function connection(ws, request) {
+  const url = request.url;
+
+  if (!url) {
+    ws.close();
+    return;
+  }
+
+  const searchParam = new URLSearchParams(url.split("?")[1]);
+  const token = searchParam.get("token") || "";
+
+  const verifyJwt = jwt.verify(token, JWT_SECRET);
+
+  if (!verifyJwt.su) {
+    ws.close();
+    return;
+  }
+
   ws.on("error", console.error);
 
   ws.on("message", function message(data) {
