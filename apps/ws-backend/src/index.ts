@@ -1,4 +1,4 @@
-import jwt, { JwtPayload } from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 import { WebSocketServer } from "ws";
 
 const wss = new WebSocketServer({ port: 8080 });
@@ -14,10 +14,9 @@ wss.on("connection", function connection(ws, request) {
 
   const searchParam = new URLSearchParams(url.split("?")[1]);
   const token = searchParam.get("token") || "";
-
   const verifyJwt = jwt.verify(token, JWT_SECRET);
 
-  if (!verifyJwt.su) {
+  if (!verifyJwt) {
     ws.close();
     return;
   }
