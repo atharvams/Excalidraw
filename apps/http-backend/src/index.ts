@@ -30,7 +30,7 @@ app.post("/signin", (req, res) => {
   //jwt token
   const jwtToken = jwt.sign(
     {
-      id: 1,
+     userId: 1,
     },
     jwtSecret
   );

@@ -7,13 +7,19 @@ export function middleware(req: Request, res: Response, next: NextFunction) {
   const token = req.headers["authorization"] || "";
   const decodeJwt = jwt.verify(token, JWT_SECRET);
 
+  if (!decodeJwt || typeof decodeJwt === "string") {
+    res.status(403).json({
+      message: "Unauthorized!",
+    });
+    return;
+  }
+
   if (decodeJwt) {
-    // @ts-ignore
-    req.userId = decodeJwt.id;
+    req.userId = decodeJwt.userId;
     next();
   } else {
     res.status(403).json({
       message: "Unauthorized!",
-    }).status;
+    });
   }
 }
